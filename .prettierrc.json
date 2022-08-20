@@ -1,4 +1,4 @@
 {
-  "semicolons": false,
+  "semi": false,
   "printWidth": 120
 }
