@@ -4,8 +4,7 @@ import { StyleSheet, TouchableOpacity, View, TouchableWithoutFeedback, Keyboard,
 import { ApplicationProvider, Layout, Text, Input, Button } from "@ui-kitten/components"
 import * as eva from "@eva-design/eva"
 import tw from "twrnc"
-import { Link } from "react-router-native"
-
+import { Link, useNavigate } from "react-router-native"
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth"
 
 export function Signup({ navigation }) {
@@ -13,6 +12,7 @@ export function Signup({ navigation }) {
   const [password, setPassword] = useState("")
 
   const auth = getAuth()
+  const navigate = useNavigate()
 
   const notValidEmail = (maybeValidEmail) => maybeValidEmail === ""
   const notValidPassword = (maybeValidPassword) => maybeValidPassword === ""
@@ -27,11 +27,11 @@ export function Signup({ navigation }) {
       return
     }
     createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
+      .then(async (userCredential) => {
         // Signed in
-        const user = userCredential.user
-        console.log({ userCredential, user })
-        Alert.alert(`logged in as ${user.email} with uid: ${user.uid}`)
+        const uid = userCredential.user.uid
+        console.log({ uid })
+        navigate("generate", { replace: true })
       })
       .catch((error) => {
         const errorCode = error.code

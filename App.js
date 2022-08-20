@@ -7,10 +7,8 @@ import { ApplicationProvider } from "@ui-kitten/components"
 import "react-native-get-random-values"
 import "react-native-url-polyfill/auto"
 import * as eva from "@eva-design/eva"
-// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app"
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import { GeneratingKey } from "./components/GeneratingKey"
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -33,6 +31,7 @@ export default function App() {
           <Route exact path="/" element={<Home />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/generate" element={<GeneratingKey />} />
         </Routes>
       </NativeRouter>
     </ApplicationProvider>
