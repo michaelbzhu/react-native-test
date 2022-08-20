@@ -6,7 +6,7 @@ import tw from 'twrnc';
 import { Link } from "react-router-native";
 
 
-export function Login({ navigation }) {
+export function Login() {
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -27,6 +27,7 @@ export function Login({ navigation }) {
             <Link to="/"><Text style={tw`underline`} >Sign Up</Text></Link>
           </View>
         </View>
+        <Link to="/"><Text style={tw`underline`} >To Home</Text></Link>
       </View>
     </TouchableWithoutFeedback>
   )

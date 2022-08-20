@@ -6,7 +6,7 @@ import * as eva from '@eva-design/eva';
 import tw from 'twrnc';
 import { Link } from "react-router-native";
 
-export function Signup({ navigation }) {
+export function Signup() {
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -27,6 +27,7 @@ export function Signup({ navigation }) {
             <Link to="login"><Text style={tw`underline`} >Log In</Text></Link>
           </View>
         </View>
+        <Link to="/"><Text style={tw`underline`} >To Home</Text></Link>
       </View>
     </TouchableWithoutFeedback>
   )

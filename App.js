@@ -1,6 +1,8 @@
 import { Signup } from './components/Signup';
 import { Login } from './components/Login';
 import { Home } from './components/Home';
+import { Pay } from './components/Pay';
+import { Deposit } from './components/Deposit';
 import { NativeRouter, Route, Link, Routes } from "react-router-native";
 import { View } from 'react-native';
 import { ApplicationProvider } from '@ui-kitten/components';
@@ -17,6 +19,8 @@ export default function App() {
           <Route exact path="/" element={<Home/>} />
           <Route path="/signup" element={<Signup/>} />
           <Route path="/login" element={<Login/>} />
+          <Route path="/pay" element={<Pay/>} />
+          <Route path="/deposit" element={<Deposit/>} />
         </Routes>
       </NativeRouter>
     </ApplicationProvider>
