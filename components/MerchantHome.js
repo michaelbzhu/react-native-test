@@ -37,6 +37,7 @@ export function MerchantHome() {
         {selectedIndex === 0 && <Dashboard/>}
         {selectedIndex === 1 && <MerchantPay/>}
         {selectedIndex === 2 && <Deposit/>}
+        <Link to="/signup"><Text style={tw`underline`} >To Signup</Text></Link>
         <BottomNavigation 
           style={tw`h-1/12 pb-5`} 
           selectedIndex={selectedIndex}

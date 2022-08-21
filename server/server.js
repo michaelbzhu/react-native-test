@@ -13,7 +13,7 @@ require('dotenv').config();
 const app = express()
 const port = 8000
 const server = http.createServer(app);
-const connection = new Connection("http://127.0.0.1:8899", 'processed');
+const connection = new Connection("https://api.devnet.solana.com", 'processed');
 
 
 app.use(cors());
@@ -21,13 +21,15 @@ app.use(express.json());
 app.use(express.urlencoded({extended:false}));
 
 
-app.get('/', async (req, res) => {
+app.get('*', async (req, res) => {
+  console.log('GET REQUEST')
   res.send({label: "CubeStore", icon: "https://res.cloudinary.com/dk-find-out/image/upload/q_70,c_pad,w_1200,h_630,f_auto/cube_icon_kjijxo.jpg"})
 })
 
-app.post('/', async (req, res) => {
-  console.log('req.body', req)
+app.post('*', async (req, res) => {
+  console.log('req.body', req.body)
   const accountField = req.body.account;
+  console.log('accountfield wtf', accountField, typeof accountField)
   if (!accountField) throw new Error('missing account');
 
   const sender = new PublicKey(accountField);
@@ -35,13 +37,18 @@ app.post('/', async (req, res) => {
   // create spl transfer instruction
   const splTransferIx = await createSplTransferIx(sender, connection);
 
-  console.log('splTransferIx', splTransferIx)
+
+  const blockhash_obj = await connection.getLatestBlockhash();
+
+  // console.log('blockhash', blockhash)
 
   // create the transaction
-  const transaction = new Transaction();
+  const transaction = new Transaction({ blockhash: blockhash_obj.blockhash, feePayer: sender, lastValidBlockHeight: blockhash_obj.lastValidBlockHeight });
 
   // add the instruction to the transaction
   transaction.add(splTransferIx);
+
+  console.log('transaction', transaction)
 
   // Serialize and return the unsigned transaction.
   const serializedTransaction = transaction.serialize({
@@ -55,11 +62,12 @@ app.post('/', async (req, res) => {
   console.log({base64Transaction})
   const message = 'Thank you for your purchase from cubestore';
 
-  response.status(200).send({ transaction: base64Transaction, message });
+  res.status(200).send({ transaction: base64Transaction, message });
 })
 
 async function createSplTransferIx(sender, connection) {
-  const splToken = new PublicKey("JA75DvMhiKwjtCbCyZTV5vuZdJ5B8zS1KXL29KALksvf");
+  const splToken = new PublicKey("6L61933r4BBMJwoejjCZeJtDWouTtgvVAokDiSqyt4DQ");
+  const MERCHANT_WALLET = new PublicKey("7LHoz2dzSjqWQFPWjjTDwya1svzywW4nQvmghcNmoxUy");
   const senderInfo = await connection.getAccountInfo(sender);
   if (!senderInfo) throw new Error('sender not found');
 
@@ -94,7 +102,7 @@ async function createSplTransferIx(sender, connection) {
   // You should always calculate the order total on the server to prevent
   // people from directly manipulating the amount on the client
   // Hard code to be 10 for now
-  let amount = 10;
+  let amount = new BigNumber(10);
   amount = amount.times(TEN.pow(mint.decimals)).integerValue(BigNumber.ROUND_FLOOR);
 
   // Check that the sender has enough tokens

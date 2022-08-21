@@ -10,6 +10,10 @@ import { BottomNavigation, BottomNavigationTab, Icon } from '@ui-kitten/componen
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import { RNCamera } from 'react-native-camera';
 import { BarCodeScanner } from 'expo-barcode-scanner';
+import { encodeURL, parseURL } from '@solana/pay';
+// import { Connection } from '@solana/web3.js/lib/index.cjs';
+import { Cluster, clusterApiUrl, Connection, PublicKey, Keypair, Transaction, sendAndConfirmTransaction } from '@solana/web3.js';
+import { Buffer } from "buffer";
 
 
 
@@ -18,6 +22,7 @@ export function Pay() {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
   const [openCamera, setOpenCamera] = useState(false);
+  const [connection, setConnection] = useState(null);
 
   const closeIcon = (props) => {
     return <Icon {...props} name="close-outline" style={{ width: 32, height: 32, color: 'white' }}></Icon>
@@ -30,12 +35,74 @@ export function Pay() {
       setHasPermission(status === 'granted');
     };
 
+    const connection = new Connection("https://api.devnet.solana.com", 'processed');
+    setConnection(connection)
+
+
     getBarCodeScannerPermissions();
   }, []);
 
-  const handleBarCodeScanned = () => {
-    console.log("yo")
+  const handleBarCodeScanned = async ({ type, data }) => {
+
+    const user = new Keypair();
+    
+    console.log(data)
+    console.log("yo, type, data", type, parseURL(data))
     setOpenCamera(false);
+
+    let parsedData = parseURL(data)
+
+    const res = await fetch(parsedData.link);
+    const json = await res.json();
+
+    console.log('json', json.label)
+
+    const res2 = await fetch(parsedData.link, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        account: '9sgcecPQ1dNvfHZwiAhEuZKw8AJVyvab5AthHt3vBAuw',
+      })
+    });
+
+
+    const json2 = await res2.json();
+    console.log('json2', json2)
+
+    const buffer = Buffer.from(json2.transaction, 'base64');
+
+    const tx = Transaction.from(buffer)
+
+    console.log('tx', tx)
+    console.log('tx', tx.instructions)
+    console.log('tx', tx.instructions.length)
+
+
+    const simulation = await connection.simulateTransaction(tx)
+    
+    console.log('simulation', simulation)
+
+    // const receipt = await connection.sendTransaction(tx)
+    let txid = await sendAndConfirmTransaction(
+      connection,
+      tx,
+      [],
+      {
+        skipPreflight: true,
+        preflightCommitment: "confirmed",
+        confirmation: "confirmed",
+      }
+    );
+
+    console.log('txid', txid)
+
+
+
+
+
   }
 
   if (hasPermission === null) {
@@ -55,7 +122,7 @@ export function Pay() {
             onBarCodeScanned={handleBarCodeScanned}
             style={tw`h-full w-full bg-black z-0`}
           />
-          <Button style={tw`mt-7 ml-2 absolute bg-transparent border-0`} onPress={() => {setOpenCamera(false)}} accessoryLeft={closeIcon}></Button></View>
+          <Button style={tw`mt-7 ml-2 absolute bg-transparent border-2`} onPress={() => {setOpenCamera(false)}} accessoryLeft={closeIcon}></Button></View>
         ) : (
           <View style={tw`h-3/12`}>
             <ScrollView style={tw`flex-col w-full p-4`}>
