@@ -16,7 +16,7 @@ export function Dashboard () {
     <View style={tw`flex-col h-11/12 w-full justify-center items-center bg-slate-100 pt-12`} >
       <ScrollView style={tw`flex-col w-full p-4`}>
           <View style={tw`flex-col items-center justify-center mb-3`}>
-            <Text category='h5'>CUBEPay Balance:</Text>
+            <Text category='h5'>cubePAY Balance:</Text>
             <Text category='h2' style={tw`text-blue-600`}>$6,341</Text>
           </View>
           <View style={tw`flex-col items-center justify-start`}>

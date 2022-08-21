@@ -7,12 +7,12 @@ import tw from 'twrnc';
 import { Link, useNavigate, useLocation } from "react-router-native";
 import * as web3 from "@solana/web3.js";
 import { BottomNavigation, BottomNavigationTab, Icon } from '@ui-kitten/components';
-import { Pay } from './Pay';
+import { MerchantPay } from './MerchantPay';
 import { Deposit } from './Deposit';
 import { Dashboard } from './Dashboard';
 
 
-export function Home() { 
+export function MerchantHome() { 
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -35,7 +35,7 @@ export function Home() {
     // <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={tw`flex-col items-center h-full w-full bg-slate-100`}>
         {selectedIndex === 0 && <Dashboard/>}
-        {selectedIndex === 1 && <Pay/>}
+        {selectedIndex === 1 && <MerchantPay/>}
         {selectedIndex === 2 && <Deposit/>}
         <BottomNavigation 
           style={tw`h-1/12 pb-5`} 
@@ -50,9 +50,3 @@ export function Home() {
     // </TouchableWithoutFeedback>
   )
 }
-
-const styles = StyleSheet.create({
-  bottomNavigation: {
-    marginVertical: 10,
-  },
-});
