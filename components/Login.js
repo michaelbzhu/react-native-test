@@ -3,12 +3,13 @@ import { useState } from "react"
 import { StyleSheet, TouchableOpacity, View, TouchableWithoutFeedback, Keyboard, Alert } from "react-native"
 import { ApplicationProvider, Layout, Text, Input, Button } from "@ui-kitten/components"
 import tw from "twrnc"
-import { Link } from "react-router-native"
+import { Link, useNavigate } from "react-router-native"
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth"
 
 export function Login({ navigation }) {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const navigate = useNavigate();
 
   const notValidEmail = (maybeValidEmail) => maybeValidEmail === ""
   const notValidPassword = (maybeValidPassword) => maybeValidPassword === ""
@@ -30,12 +31,14 @@ export function Login({ navigation }) {
         const user = userCredential.user
         console.log({ userCredential, user })
         Alert.alert(`logged in as ${user.email} with uid: ${user.uid}`)
+        navigate("/home", { replace: true })
       })
       .catch((error) => {
         const errorCode = error.code
         const errorMessage = error.message
         console.log({ errorCode, errorMessage })
       })
+
   }
 
   return (

@@ -2,9 +2,11 @@ const express = require('express')
 const http = require('http');
 const cors = require("cors");
 const { clusterApiUrl, Connection, Keypair, PublicKey, Transaction } = require("@solana/web3.js");
-const { createTransferCheckedInstruction, getAccount, getAssociatedTokenAddress, getMint } = require('@solana/spl-token');
+const { createTransferCheckedInstruction, getAccount, getAssociatedTokenAddress, getMint, createAssociatedTokenAccount, TOKEN_PROGRAM_ID } = require('@solana/spl-token');
 const BigNumber = require('bignumber.js');
 const { TEN } = require('@solana/pay');
+const { getFirestore, collection, doc, setDoc } = require("firebase/firestore")
+
 
 
 
@@ -13,7 +15,20 @@ require('dotenv').config();
 const app = express()
 const port = 8000
 const server = http.createServer(app);
-const connection = new Connection("https://api.devnet.solana.com", 'processed');
+const connection = new Connection("http://127.0.0.1:8899", 'processed');
+const USDC_MINT_ADDR = "6L61933r4BBMJwoejjCZeJtDWouTtgvVAokDiSqyt4DQ"
+const SECRET_KEY = process.env.KEYPAIR.split(",").map(x => parseInt(x))
+const firebaseConfig = {
+  apiKey: "AIzaSyBYtvszJhYMn_7UwhIzQ_7lH4gzNQHD8-8",
+  authDomain: "floodgate-squad.firebaseapp.com",
+  projectId: "floodgate-squad",
+  storageBucket: "floodgate-squad.appspot.com",
+  messagingSenderId: "495661629168",
+  appId: "1:495661629168:web:b642b61f5394be9a4c8c35",
+}
+
+// Initialize Firebase
+const fireBaseApp = initializeApp(firebaseConfig)
 
 
 app.use(cors());
@@ -26,7 +41,42 @@ app.get('*', async (req, res) => {
   res.send({label: "CubeStore", icon: "https://res.cloudinary.com/dk-find-out/image/upload/q_70,c_pad,w_1200,h_630,f_auto/cube_icon_kjijxo.jpg"})
 })
 
-app.post('*', async (req, res) => {
+app.post('/generateAccounts', async (req,res) => {
+  console.log('Here req.body', req.body.uid)
+  // const uint8 = new Uint8Array(SECRET_KEY);
+  // console.log('here')
+
+  const uid = req.body.uid;
+  const user = new Keypair();
+  const companyKP = new Keypair();
+  const airdrop_sig = await connection.requestAirdrop(companyKP.publicKey, 2e9);
+  const latestBlockHash = await connection.getLatestBlockhash();
+  const tx = await connection.confirmTransaction({
+    blockhash: latestBlockHash.blockhash,
+    lastValidBlockHeight: latestBlockHash.lastValidBlockHeight,
+    signature: airdrop_sig,
+  });
+
+  console.log('here', tx)
+
+  const address = await createAssociatedTokenAccount(connection, companyKP, new PublicKey(USDC_MINT_ADDR), user.publicKey)
+
+  const db = getFirestore(fireBaseApp)
+  try {
+    await setDoc(doc(collection(db, "wallets"), uid), {
+      uid,
+      publicKey: user.publicKey.toBase58(), // convert to base58 so it's a supported datatype in db
+      secretKey: bs58.encode(user.secretKey),
+    })
+  } catch (e) {
+    console.error("error adding doc: ", e)
+  }
+
+  res.status(200).send({ address });
+
+})
+
+app.post('/', async (req, res) => {
   console.log('req.body', req.body)
   const accountField = req.body.account;
   console.log('accountfield wtf', accountField, typeof accountField)

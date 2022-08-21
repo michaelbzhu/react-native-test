@@ -6,10 +6,15 @@ import * as eva from "@eva-design/eva"
 import tw from "twrnc"
 import { Link, useNavigate } from "react-router-native"
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth"
+import { createAssociatedTokenAccount } from '@solana/spl-token';
+import { Cluster, clusterApiUrl, Connection, PublicKey, Keypair, Transaction, sendAndConfirmTransaction } from '@solana/web3.js';
+
 
 export function Signup({ navigation }) {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const connection = new Connection("https://api.devnet.solana.com", 'processed');
+  const SERVER_URL = "https://hip-hands-arrive-12-202-1-227.loca.lt"
 
   const auth = getAuth()
   const navigate = useNavigate()
@@ -31,7 +36,8 @@ export function Signup({ navigation }) {
         // Signed in
         const uid = userCredential.user.uid
         console.log({ uid })
-        navigate("generate", { replace: true })
+
+        navigate("/generate", { replace: true })
       })
       .catch((error) => {
         const errorCode = error.code

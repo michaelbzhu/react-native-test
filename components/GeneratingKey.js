@@ -11,6 +11,7 @@ export function GeneratingKey() {
   const navigate = useNavigate()
   const auth = getAuth()
   const user = auth.currentUser
+  const SERVER_URL = "https://bitter-parks-yawn-12-202-1-227.loca.lt"
 
   useEffect(() => {
     async function generateAndStoreKeys() {
@@ -18,27 +19,33 @@ export function GeneratingKey() {
         const uid = user.uid
         console.log({ uid })
 
-        const { publicKey, secretKey: secretAndPublicBuffer } = web3.Keypair.generate()
-        const secretKey = secretAndPublicBuffer.slice(0, secretAndPublicBuffer.length / 2)
-        console.log("publickey", publicKey)
-        console.log({
-          publicKey,
-          encodedPublicKey: publicKey.toBase58(),
-          secretKey,
-          encodedSecretKey: bs58.encode(secretKey),
-        })
-        const db = getFirestore()
-        try {
-          await setDoc(doc(collection(db, "wallets"), uid), {
+        // const { publicKey, secretKey } = web3.Keypair.generate()
+
+        const res = await fetch(SERVER_URL + "/generateAccounts", {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
             uid,
-            publicKey: publicKey.toBase58(), // convert to base58 so it's a supported datatype in db
-            secretKey: bs58.encode(secretKey),
-          }).then(() => {
-            setTimeout(() => navigate("/home", { replace: true }), 1000)
           })
-        } catch (e) {
-          console.error("error adding doc: ", e)
-        }
+        });
+        // const tokenAcc = await createAssociatedTokenAccount(connection, )
+
+        // console.log({ publicKey: publicKey.toBase58(), secretKey: bs58.encode(secretKey) })
+        // const db = getFirestore()
+        // try {
+        //   await setDoc(doc(collection(db, "wallets"), uid), {
+        //     uid,
+        //     publicKey: publicKey.toBase58(), // convert to base58 so it's a supported datatype in db
+        //     secretKey: bs58.encode(secretKey),
+        //   }).then(() => {
+        //     setTimeout(() => navigate("/home", { replace: true }), 1000)
+        //   })
+        // } catch (e) {
+        //   console.error("error adding doc: ", e)
+        // }
       } else {
         navigate("/login")
       }

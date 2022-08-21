@@ -45,7 +45,11 @@ export function Pay() {
   const handleBarCodeScanned = async ({ type, data }) => {
 
     const user = new Keypair();
-    
+
+    console.log('user', user)
+    console.log('user.publicKey', user.publicKey);
+    console.log('user.secretKey', user.secretKey);
+
     console.log(data)
     console.log("yo, type, data", type, parseURL(data))
     setOpenCamera(false);
