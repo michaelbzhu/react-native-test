@@ -11,6 +11,7 @@ import { Pay } from "./Pay"
 import { Deposit } from "./Deposit"
 import { Dashboard } from "./Dashboard"
 import { usePublicKey } from "../hooks/usePublicKey"
+import { useSecretKey } from "../hooks/useSecretKey"
 
 export function Home() {
   const location = useLocation()
@@ -19,7 +20,8 @@ export function Home() {
   const [selectedIndex, setSelectedIndex] = useState(0)
 
   const publicKey = usePublicKey()
-  console.log({ publicKey })
+  const secretKey = useSecretKey()
+  console.log({ publicKey, secretKey })
 
   const renderTransactions = () => {
     return <View></View>

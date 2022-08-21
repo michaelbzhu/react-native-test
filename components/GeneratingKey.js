@@ -18,8 +18,15 @@ export function GeneratingKey() {
         const uid = user.uid
         console.log({ uid })
 
-        const { publicKey, secretKey } = web3.Keypair.generate()
-        console.log({ publicKey: publicKey.toBase58(), secretKey: bs58.encode(secretKey) })
+        const { publicKey, secretKey: secretAndPublicBuffer } = web3.Keypair.generate()
+        const secretKey = secretAndPublicBuffer.slice(0, secretAndPublicBuffer.length / 2)
+        console.log("publickey", publicKey)
+        console.log({
+          publicKey,
+          encodedPublicKey: publicKey.toBase58(),
+          secretKey,
+          encodedSecretKey: bs58.encode(secretKey),
+        })
         const db = getFirestore()
         try {
           await setDoc(doc(collection(db, "wallets"), uid), {
