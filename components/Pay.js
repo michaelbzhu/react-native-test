@@ -33,8 +33,9 @@ export function Pay() {
     getBarCodeScannerPermissions();
   }, []);
 
-  const handleBarCodeScanned = () => {
-    console.log("yo")
+  const handleBarCodeScanned = ({ type, data }) => {
+    console.log(typeof data)
+    console.log("yo, type, data", type, decodeURIComponent(data))
     setOpenCamera(false);
   }
 
@@ -55,7 +56,7 @@ export function Pay() {
             onBarCodeScanned={handleBarCodeScanned}
             style={tw`h-full w-full bg-black z-0`}
           />
-          <Button style={tw`mt-7 ml-2 absolute bg-transparent border-0`} onPress={() => {setOpenCamera(false)}} accessoryLeft={closeIcon}></Button></View>
+          <Button style={tw`mt-7 ml-2 absolute bg-transparent border-2`} onPress={() => {setOpenCamera(false)}} accessoryLeft={closeIcon}></Button></View>
         ) : (
           <View style={tw`h-3/12`}>
             <ScrollView style={tw`flex-col w-full p-4`}>
