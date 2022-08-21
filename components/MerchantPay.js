@@ -16,6 +16,7 @@ import BigNumber from 'bignumber.js';
 import { getAuth } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import QRCode from "react-qr-code";
+import { keyboardProps } from 'react-native-web/dist/cjs/modules/forwardedProps';
 
 
 export function MerchantPay() {
@@ -56,7 +57,6 @@ export function MerchantPay() {
   }, [])
 
   const generateQR = () => {
-    console.log('QRURl', QRUrl)
 
     const recipient = new PublicKey('9sgcecPQ1dNvfHZwiAhEuZKw8AJVyvab5AthHt3vBAuw');
     const amount = new BigNumber(20);
@@ -75,22 +75,27 @@ export function MerchantPay() {
 
     const url = encodeURL({ recipient, amount, splToken, reference, label, message, memo });
 
-    setQRUrl(url.toString());
+
+    console.log("YO", url)
+    console.log("YO", encodeURIComponent("solana:https://loose-hoops-stick-12-202-1-227.loca.lt"))
+    setQRUrl(encodeURIComponent("solana:https://loose-hoops-stick-12-202-1-227.loca.lt"));
   }
 
 
   return (
-    <View style={tw`flex-col h-11/12 w-full justify-around items-center bg-slate-100`} >
-      <View style={tw`h-7/12 justify-around items-center flex-col w-full`}>
-        <Text category='h3'>It's time to get paid.</Text>
-        <View style={tw`w-7/12`}>
-          <Input label='How much are you requesting?' placeholder='Amount (in USDC)' value={inputAmount} onChangeText={nextValue => setInputAmount(nextValue)}></Input>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View style={tw`flex-col h-11/12 w-full justify-around items-center bg-slate-100`} >
+        <View style={tw`h-7/12 justify-around items-center flex-col w-full`}>
+          <Text category='h3'>It's time to get paid.</Text>
+          <View style={tw`w-7/12`}>
+            <Input label='How much are you requesting?' placeholder='Amount (in USDC)' value={inputAmount} onChangeText={nextValue => setInputAmount(nextValue)}></Input>
+          </View>
+          <Button status='primary' style={tw`w-8/12`} onPress={generateQR}>Generate QR Code</Button>
+          {QRUrl && <QRCode
+            value={QRUrl}
+          />}
         </View>
-        <Button status='primary' style={tw`w-8/12`} onPress={generateQR}>Generate QR Code</Button>
-        {QRUrl && <QRCode
-          value={QRUrl}
-        />}
       </View>
-    </View>
+    </TouchableWithoutFeedback>
   )
 }

@@ -35,6 +35,7 @@ export default function App() {
         <NativeRouter>
           <Routes>
             <Route exact path="/home" element={<Home />} />
+            <Route exact path="/merchanthome" element={<MerchantHome />} />
             <Route exact path="/" element={<Signup />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/login" element={<Login />} />

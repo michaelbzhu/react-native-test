@@ -70,7 +70,8 @@ export function Signup({ navigation }) {
             </Link>
           </View>
         </View>
-        <Link to="/"><Text style={tw`underline`} >To Home</Text></Link>
+        <Link to="/home"><Text style={tw`underline`} >To Home</Text></Link>
+        <Link to="/merchanthome"><Text style={tw`underline`} >To Merchant Home</Text></Link>
       </View>
     </TouchableWithoutFeedback>
   )
