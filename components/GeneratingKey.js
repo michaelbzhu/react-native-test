@@ -4,7 +4,7 @@ import { View, Text, ActivityIndicator } from "react-native"
 import tw from "twrnc"
 import { useEffect } from "react"
 import * as web3 from "@solana/web3.js"
-import { getFirestore, collection, addDoc } from "firebase/firestore"
+import { getFirestore, collection, doc, setDoc } from "firebase/firestore"
 import bs58 from "bs58"
 
 export function GeneratingKey() {
@@ -12,32 +12,32 @@ export function GeneratingKey() {
   const auth = getAuth()
   const user = auth.currentUser
 
-  useEffect(() => {
-    async function generateAndStoreKeys() {
-      if (user) {
-        const uid = user.uid
-        console.log({ uid })
+  // useEffect(() => {
+  //   async function generateAndStoreKeys() {
+  //     if (user) {
+  //       const uid = user.uid
+  //       console.log({ uid })
 
-        const { publicKey, secretKey } = web3.Keypair.generate()
-        console.log({ publicKey: publicKey.toBase58(), secretKey: bs58.encode(secretKey) })
-        const db = getFirestore()
-        try {
-          await addDoc(collection(db, "wallets"), {
-            uid,
-            publicKey: publicKey.toBase58(), // convert to base58 so it's a supported datatype in db
-            secretKey: bs58.encode(secretKey),
-          }).then(() => {
-            setTimeout(() => navigate("home", { replace: true }), 1000)
-          })
-        } catch (e) {
-          console.error("error adding doc: ", e)
-        }
-      } else {
-        navigate("login")
-      }
-    }
-    generateAndStoreKeys()
-  }, [])
+  //       const { publicKey, secretKey } = web3.Keypair.generate()
+  //       console.log({ publicKey: publicKey.toBase58(), secretKey: bs58.encode(secretKey) })
+  //       const db = getFirestore()
+  //       try {
+  //         await setDoc(doc(collection(db, "wallets"), uid), {
+  //           uid,
+  //           publicKey: publicKey.toBase58(), // convert to base58 so it's a supported datatype in db
+  //           secretKey: bs58.encode(secretKey),
+  //         }).then(() => {
+  //           setTimeout(() => navigate("home", { replace: true }), 1000)
+  //         })
+  //       } catch (e) {
+  //         console.error("error adding doc: ", e)
+  //       }
+  //     } else {
+  //       navigate("login")
+  //     }
+  //   }
+  //   generateAndStoreKeys()
+  // }, [])
 
   return (
     <View style={tw`flex-col items-center justify-center h-full w-full`}>

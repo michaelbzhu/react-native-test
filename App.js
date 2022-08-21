@@ -3,7 +3,6 @@ import { Login } from './components/Login';
 import { Home } from './components/Home';
 import { NativeRouter, Route, Link, Routes } from "react-router-native";
 import { View } from 'react-native';
-import { ApplicationProvider } from '@ui-kitten/components';
 import 'react-native-get-random-values';
 import 'react-native-url-polyfill/auto';
 import * as eva from '@eva-design/eva';
