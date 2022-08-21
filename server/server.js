@@ -1,8 +1,11 @@
 const express = require('express')
 const http = require('http');
 const cors = require("cors");
-const bodyParser = require('body-parser')
-const { createTransferCheckedInstruction, getAccount, getAssociatedTokenAddress, getMint, PublicKey, Connection } = require("@solana/web3.js");
+const { clusterApiUrl, Connection, Keypair, PublicKey, Transaction } = require("@solana/web3.js");
+const { createTransferCheckedInstruction, getAccount, getAssociatedTokenAddress, getMint } = require('@solana/spl-token');
+const BigNumber = require('bignumber.js');
+const { TEN } = require('@solana/pay');
+
 
 
 require('dotenv').config();
@@ -56,21 +59,33 @@ app.post('/', async (req, res) => {
 })
 
 async function createSplTransferIx(sender, connection) {
-  const splToken = "JA75DvMhiKwjtCbCyZTV5vuZdJ5B8zS1KXL29KALksvf"
+  const splToken = new PublicKey("JA75DvMhiKwjtCbCyZTV5vuZdJ5B8zS1KXL29KALksvf");
   const senderInfo = await connection.getAccountInfo(sender);
   if (!senderInfo) throw new Error('sender not found');
 
   // Get the sender's ATA and check that the account exists and can send tokens
+  console.log('sender', sender)
+  console.log('splToken', splToken)
+
   const senderATA = await getAssociatedTokenAddress(splToken, sender);
+
+  console.log('yoo senderATA', senderATA)
   const senderAccount = await getAccount(connection, senderATA);
+  console.log('yoo')
   if (!senderAccount.isInitialized) throw new Error('sender not initialized');
+  console.log('yoo')
   if (senderAccount.isFrozen) throw new Error('sender frozen');
+  console.log('yoo')
 
   // Get the merchant's ATA and check that the account exists and can receive tokens
   const merchantATA = await getAssociatedTokenAddress(splToken, MERCHANT_WALLET);
+  console.log('yoo')
   const merchantAccount = await getAccount(connection, merchantATA);
+  console.log('yoo')
   if (!merchantAccount.isInitialized) throw new Error('merchant not initialized');
+  console.log('yoo')
   if (merchantAccount.isFrozen) throw new Error('merchant frozen');
+  console.log('yoo')
 
   // Check that the token provided is an initialized mint
   const mint = await getMint(connection, splToken);
