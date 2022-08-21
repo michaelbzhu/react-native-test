@@ -30,22 +30,10 @@ export function GeneratingKey() {
           body: JSON.stringify({
             uid,
           })
-        });
-        // const tokenAcc = await createAssociatedTokenAccount(connection, )
+        }).then(() => {
+          navigate("/home", { replace: true })
+        })
 
-        // console.log({ publicKey: publicKey.toBase58(), secretKey: bs58.encode(secretKey) })
-        // const db = getFirestore()
-        // try {
-        //   await setDoc(doc(collection(db, "wallets"), uid), {
-        //     uid,
-        //     publicKey: publicKey.toBase58(), // convert to base58 so it's a supported datatype in db
-        //     secretKey: bs58.encode(secretKey),
-        //   }).then(() => {
-        //     setTimeout(() => navigate("/home", { replace: true }), 1000)
-        //   })
-        // } catch (e) {
-        //   console.error("error adding doc: ", e)
-        // }
       } else {
         navigate("/login")
       }

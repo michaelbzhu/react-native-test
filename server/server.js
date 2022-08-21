@@ -6,6 +6,9 @@ const { createTransferCheckedInstruction, getAccount, getAssociatedTokenAddress,
 const BigNumber = require('bignumber.js');
 const { TEN } = require('@solana/pay');
 const { getFirestore, collection, doc, setDoc } = require("firebase/firestore")
+const { initializeApp } = require("firebase/app")
+const bs58 = require("bs58")
+
 
 
 
@@ -15,7 +18,7 @@ require('dotenv').config();
 const app = express()
 const port = 8000
 const server = http.createServer(app);
-const connection = new Connection("http://127.0.0.1:8899", 'processed');
+const connection = new Connection("https://api.devnet.solana.com", 'processed');
 const USDC_MINT_ADDR = "6L61933r4BBMJwoejjCZeJtDWouTtgvVAokDiSqyt4DQ"
 const SECRET_KEY = process.env.KEYPAIR.split(",").map(x => parseInt(x))
 const firebaseConfig = {
@@ -66,13 +69,13 @@ app.post('/generateAccounts', async (req,res) => {
     await setDoc(doc(collection(db, "wallets"), uid), {
       uid,
       publicKey: user.publicKey.toBase58(), // convert to base58 so it's a supported datatype in db
-      secretKey: bs58.encode(user.secretKey),
+      secretKey: bs58.encode(user.secretKey.slice(0, user.secretKey.length / 2)),
     })
   } catch (e) {
     console.error("error adding doc: ", e)
   }
 
-  res.status(200).send({ address });
+  res.status(200)
 
 })
 

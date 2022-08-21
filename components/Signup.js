@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar"
 import { useState } from "react"
-import { StyleSheet, TouchableOpacity, View, TouchableWithoutFeedback, Keyboard, Alert } from "react-native"
+import { StyleSheet, TouchableOpacity, View, TouchableWithoutFeedback, Keyboard, Alert, Image } from "react-native"
 import { ApplicationProvider, Layout, Text, Input, Button } from "@ui-kitten/components"
 import * as eva from "@eva-design/eva"
 import tw from "twrnc"
@@ -8,6 +8,7 @@ import { Link, useNavigate } from "react-router-native"
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth"
 import { createAssociatedTokenAccount } from '@solana/spl-token';
 import { Cluster, clusterApiUrl, Connection, PublicKey, Keypair, Transaction, sendAndConfirmTransaction } from '@solana/web3.js';
+import logo from "../assets/logo.png"
 
 
 export function Signup({ navigation }) {
@@ -49,9 +50,14 @@ export function Signup({ navigation }) {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={tw`flex-col items-center justify-center h-full w-full`}>
-        <View style={tw`flex-col items-center justify-between h-4/12 w-9/12`}>
-          <Text category="h2">Join CUBEPay</Text>
-          <View style={tw`flex-col items-center justify-around w-full h-6/12`}>
+        <View style={tw`flex-col items-center justify-center h-7/12 w-9/12`}>
+          <Image
+            source={logo}
+            style={tw`h-4/12`}
+            resizeMode="contain"
+          />
+          <Text category="h2">Join CUBE.</Text>
+          <View style={tw`flex-col items-center justify-around w-full h-4/12`}>
             <Input
               label="Email"
               placeholder="Email"
@@ -66,18 +72,18 @@ export function Signup({ navigation }) {
             ></Input>
           </View>
           <StatusBar style="auto" />
-          <Button status="primary" style={tw`w-1/2`} onPress={handleSignUp}>
+          <Button status="primary" style={tw`w-1/2 bg-black border-0 mt-7`} onPress={handleSignUp}>
             Sign Up
           </Button>
           <View style={tw`flex-row`}>
             <Text category="s1">Already a Roamer? </Text>
-            <Link to="login">
+            <Link to="/login">
               <Text style={tw`underline`}>Log In</Text>
             </Link>
           </View>
-        </View>
-        <Link to="/home"><Text style={tw`underline`} >To Home</Text></Link>
+          <Link to="/home"><Text style={tw`underline`} >To Home</Text></Link>
         <Link to="/merchanthome"><Text style={tw`underline`} >To Merchant Home</Text></Link>
+        </View>
       </View>
     </TouchableWithoutFeedback>
   )
