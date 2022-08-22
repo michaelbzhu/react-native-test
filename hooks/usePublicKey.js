@@ -16,8 +16,8 @@ export const usePublicKey = (useTestKey = false) => {
 
   async function getPublicKeyOfCurrentUser() {
     if (useTestKey) {
-      setPublicKey(new PublicKey("9sgcecPQ1dNvfHZwiAhEuZKw8AJVyvab5AthHt3vBAuw"))
-      getTokenBalance(new PublicKey("9sgcecPQ1dNvfHZwiAhEuZKw8AJVyvab5AthHt3vBAuw"))
+      setPublicKey(new PublicKey("3sEobDWBDR4edUjTNmiTTvcHx4qKrXKVBggH4c2YQApG"))
+      getTokenBalance(new PublicKey("3sEobDWBDR4edUjTNmiTTvcHx4qKrXKVBggH4c2YQApG"))
       return
     }
     if (!userUID) {

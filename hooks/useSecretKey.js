@@ -3,13 +3,19 @@ import { getAuth } from "firebase/auth"
 import { getFirestore, doc, getDoc } from "firebase/firestore"
 import bs58 from "bs58"
 
-export const useSecretKey = () => {
+export const useSecretKey = (useTestKey = false) => {
   const [secretKey, setSecretKey] = useState(null)
   const db = getFirestore()
   const auth = getAuth()
   const userUID = auth.currentUser?.uid
 
   async function getSecretKeyOfCurrentUser() {
+    if (useTestKey) {
+      setSecretKey(
+        bs58.decode("2vrujZyzgP1wEjkuF2Tz1cdcit4kjcxfvdEypUKKaX5VmyixpNkoiZBUPW3kHBK1fw9af7cfQNAPtvWsLWKBoBN")
+      )
+      return
+    }
     if (!userUID) {
       console.error("Can't get user UID")
       return
