@@ -11,7 +11,7 @@ export function GeneratingKey() {
   const navigate = useNavigate()
   const auth = getAuth()
   const user = auth.currentUser
-  const SERVER_URL = "https://bitter-parks-yawn-12-202-1-227.loca.lt"
+  const SERVER_URL = "https://calm-pots-cheer-12-202-1-227.loca.lt"
 
   useEffect(() => {
     async function generateAndStoreKeys() {

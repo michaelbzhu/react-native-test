@@ -2,7 +2,7 @@ const express = require('express')
 const http = require('http');
 const cors = require("cors");
 const { clusterApiUrl, Connection, Keypair, PublicKey, Transaction } = require("@solana/web3.js");
-const { createTransferCheckedInstruction, getAccount, getAssociatedTokenAddress, getMint, createAssociatedTokenAccount, TOKEN_PROGRAM_ID } = require('@solana/spl-token');
+const { createTransferCheckedInstruction, getAccount, getAssociatedTokenAddress, getMint, createAssociatedTokenAccount, TOKEN_PROGRAM_ID, decodeTransferCheckedInstruction } = require('@solana/spl-token');
 const BigNumber = require('bignumber.js');
 const { TEN } = require('@solana/pay');
 const { getFirestore, collection, doc, setDoc } = require("firebase/firestore")
@@ -18,7 +18,7 @@ require('dotenv').config();
 const app = express()
 const port = 8000
 const server = http.createServer(app);
-const connection = new Connection("https://api.devnet.solana.com", 'processed');
+const connection = new Connection("https://api.devnet.solana.com", 'confirmed');
 const USDC_MINT_ADDR = "6L61933r4BBMJwoejjCZeJtDWouTtgvVAokDiSqyt4DQ"
 const SECRET_KEY = process.env.KEYPAIR.split(",").map(x => parseInt(x))
 const firebaseConfig = {
@@ -59,6 +59,13 @@ app.post('/generateAccounts', async (req,res) => {
     lastValidBlockHeight: latestBlockHash.lastValidBlockHeight,
     signature: airdrop_sig,
   });
+  const airdrop_sig2 = await connection.requestAirdrop(user.publicKey, 2e9);
+  const latestBlockHash2 = await connection.getLatestBlockhash();
+  const tx2 = await connection.confirmTransaction({
+    blockhash: latestBlockHash.blockhash,
+    lastValidBlockHeight: latestBlockHash.lastValidBlockHeight,
+    signature: airdrop_sig,
+  });
 
   console.log('here', tx)
 
@@ -69,7 +76,7 @@ app.post('/generateAccounts', async (req,res) => {
     await setDoc(doc(collection(db, "wallets"), uid), {
       uid,
       publicKey: user.publicKey.toBase58(), // convert to base58 so it's a supported datatype in db
-      secretKey: bs58.encode(user.secretKey.slice(0, user.secretKey.length / 2)),
+      secretKey: bs58.encode(user.secretKey),
     })
   } catch (e) {
     console.error("error adding doc: ", e)
@@ -113,6 +120,7 @@ app.post('/', async (req, res) => {
 
   const base64Transaction = serializedTransaction.toString('base64');
   console.log({base64Transaction})
+  console.log('bs58', bs58.encode(serializedTransaction))
   const message = 'Thank you for your purchase from cubestore';
 
   res.status(200).send({ transaction: base64Transaction, message });
@@ -121,16 +129,16 @@ app.post('/', async (req, res) => {
 async function createSplTransferIx(sender, connection) {
   const splToken = new PublicKey("6L61933r4BBMJwoejjCZeJtDWouTtgvVAokDiSqyt4DQ");
   const MERCHANT_WALLET = new PublicKey("7LHoz2dzSjqWQFPWjjTDwya1svzywW4nQvmghcNmoxUy");
-  const senderInfo = await connection.getAccountInfo(sender);
-  if (!senderInfo) throw new Error('sender not found');
+  // const senderInfo = await connection.getAccountInfo(sender);
+  // if (!senderInfo) throw new Error('sender not found');
 
   // Get the sender's ATA and check that the account exists and can send tokens
-  console.log('sender', sender)
+  console.log('sender', sender.toBase58())
   console.log('splToken', splToken)
 
   const senderATA = await getAssociatedTokenAddress(splToken, sender);
 
-  console.log('yoo senderATA', senderATA)
+  console.log('yoo senderATA', senderATA.toBase58())
   const senderAccount = await getAccount(connection, senderATA);
   console.log('yoo')
   if (!senderAccount.isInitialized) throw new Error('sender not initialized');
@@ -171,6 +179,9 @@ async function createSplTransferIx(sender, connection) {
       tokens,
       mint.decimals
   );
+
+  const decoded = decodeTransferCheckedInstruction(splTransferIx)
+  console.log('decoded', decoded)
 
   // Create a reference that is unique to each checkout session
   const references = [new Keypair().publicKey];

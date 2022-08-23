@@ -44,14 +44,14 @@ export function Login({ navigation }) {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={tw`flex-col items-center justify-center h-full w-full`}>
-        <View style={tw`flex-col items-center justify-between h-7/12 w-9/12`}>
+      <View style={tw`flex-col items-center justify-start h-full w-full mt-30`}>
+        <View style={tw`flex-col items-center justify-start h-7/12 w-9/12`}>
           <Image
               source={logo}
               style={tw`h-4/12`}
               resizeMode="contain"
             />
-          <Text category="h3">Enter CUBE.</Text>
+          <Text category="h2">Enter CUBE.</Text>
           <View style={tw`flex-col items-center justify-around w-full h-4/12`}>
             <Input
               label="Email"
@@ -66,11 +66,10 @@ export function Login({ navigation }) {
               onChangeText={(nextValue) => setPassword(nextValue)}
             ></Input>
           </View>
-          <StatusBar style="auto" />
           <Button status="primary" style={tw`w-1/2 bg-black border-0 mt-7`} onPress={handleLogIn}>
             Log In
           </Button>
-          <View style={tw`flex-row`}>
+          <View style={tw`flex-row mt-1`}>
             <Text category="s1">Don't have an account? </Text>
             <Link to="/">
               <Text style={tw`underline`}>Sign Up</Text>

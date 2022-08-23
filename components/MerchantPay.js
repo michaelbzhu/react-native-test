@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { useState, useEffect } from 'react';
-import { StyleSheet, TouchableOpacity, View, TouchableWithoutFeedback, Keyboard, ScrollView } from 'react-native';
+import { StyleSheet, TouchableOpacity, View, TouchableWithoutFeedback, Keyboard, ScrollView, ImageBackground } from 'react-native';
 import { ApplicationProvider, Layout, Text, Input, Button } from '@ui-kitten/components';
 import * as eva from '@eva-design/eva';
 import tw from 'twrnc';
@@ -17,7 +17,7 @@ import { getAuth } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import QRCode from "react-qr-code";
 import { keyboardProps } from 'react-native-web/dist/cjs/modules/forwardedProps';
-
+import powerpuff from "../assets/Powerpuff.jpeg"
 
 export function MerchantPay() {
 
@@ -78,23 +78,25 @@ export function MerchantPay() {
 
     console.log("YO", url)
     console.log("YO", encodeURIComponent("solana:https://loose-hoops-stick-12-202-1-227.loca.lt"))
-    setQRUrl(encodeURIComponent("solana:https://loose-hoops-stick-12-202-1-227.loca.lt"));
+    setQRUrl("solana:https://puny-laws-shout-131-239-179-134.loca.lt");
   }
 
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={tw`flex-col h-11/12 w-full justify-around items-center bg-slate-100`} >
+      <View style={tw`flex-col h-11/12 w-full justify-around items-center`} >
+      <ImageBackground source={powerpuff} style={tw.style(`h-full w-full flex-col justify-center items-center `)} imageStyle={{opacity:0.6}} resizeMode="fill">
         <View style={tw`h-7/12 justify-around items-center flex-col w-full`}>
           <Text category='h3'>It's time to get paid.</Text>
           <View style={tw`w-7/12`}>
-            <Input label='How much are you requesting?' placeholder='Amount (in USDC)' value={inputAmount} onChangeText={nextValue => setInputAmount(nextValue)}></Input>
+            <Input label={() => <Text style={{fontWeight:"bold"}}>How much are you requesting?</Text>} placeholder='Amount (in USDC)' value={inputAmount} onChangeText={nextValue => setInputAmount(nextValue)}></Input>
           </View>
           <Button status='primary' style={tw`w-8/12`} onPress={generateQR}>Generate QR Code</Button>
           {QRUrl && <QRCode
-            value={QRUrl}
+            value={"solana:https://puny-laws-shout-131-239-179-134.loca.lt"}
           />}
         </View>
+        </ImageBackground>
       </View>
     </TouchableWithoutFeedback>
   )

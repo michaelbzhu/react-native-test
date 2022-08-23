@@ -15,7 +15,7 @@ export function Signup({ navigation }) {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const connection = new Connection("https://api.devnet.solana.com", 'processed');
-  const SERVER_URL = "https://hip-hands-arrive-12-202-1-227.loca.lt"
+  // const SERVER_URL = "https://hip-hands-arrive-12-202-1-227.loca.lt"
 
   const auth = getAuth()
   const navigate = useNavigate()
@@ -49,8 +49,8 @@ export function Signup({ navigation }) {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={tw`flex-col items-center justify-center h-full w-full`}>
-        <View style={tw`flex-col items-center justify-center h-7/12 w-9/12`}>
+      <View style={tw`flex-col items-center justify-start h-full w-full mt-30`}>
+        <View style={tw`flex-col items-center justify-start h-7/12 w-9/12`}>
           <Image
             source={logo}
             style={tw`h-4/12`}
@@ -71,19 +71,18 @@ export function Signup({ navigation }) {
               onChangeText={(nextValue) => setPassword(nextValue)}
             ></Input>
           </View>
-          <StatusBar style="auto" />
           <Button status="primary" style={tw`w-1/2 bg-black border-0 mt-7`} onPress={handleSignUp}>
             Sign Up
           </Button>
-          <View style={tw`flex-row`}>
-            <Text category="s1">Already a Roamer? </Text>
+          <View style={tw`flex-row mt-1`}>
+            <Text category="s1" >Already a CUBER? </Text>
             <Link to="/login">
               <Text style={tw`underline`}>Log In</Text>
             </Link>
           </View>
-          <Link to="/home"><Text style={tw`underline`} >To Home</Text></Link>
-        <Link to="/merchanthome"><Text style={tw`underline`} >To Merchant Home</Text></Link>
         </View>
+        <Link to="/home"><Text style={tw`underline`} >To Home</Text></Link>
+        <Link to="/merchanthome"><Text style={tw`underline`} >To Merchant Home</Text></Link>
       </View>
     </TouchableWithoutFeedback>
   )
