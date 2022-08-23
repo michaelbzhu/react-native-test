@@ -6,13 +6,23 @@ export function TransactionList({ data }) {
   return (
     <FlatList
       style={tw`w-full`}
-      data={[{ title: "tx1" }, { title: "tx2" }, { title: "tx3" }]}
-      renderItem={({ item }) => <Transaction style={tw`flex w-full bg-white rounded-2xl`} title={item.title} />}
+      data={[
+        { title: "Atlas Cafe Mocha", amount: 6.5 },
+        { title: "Atlas Cafe Latte", amount: 5.5 },
+        { title: "Autonomous Desk", amount: 499.99999999 },
+        { title: "SF MUNI", amount: 2.5 },
+        { title: "Caltrain", amount: 11.9999999999 },
+        { title: "Braintrust talent", amount: 2500 },
+        { title: "STEPN Shoes", amount: 9000 },
+      ]}
+      renderItem={({ item }) => (
+        <Transaction style={tw`flex w-full bg-white rounded-2xl`} title={item.title} price={item.amount} />
+      )}
     />
   )
 }
 
-function Transaction({ title }) {
+function Transaction({ title, price }) {
   return (
     <View style={tw`flex flex-row content-center w-full bg-white rounded-2xl p-2 my-2 `}>
       <Image
@@ -27,7 +37,7 @@ function Transaction({ title }) {
         <Text style={tw`text-base`}>08/11/2022</Text>
       </View>
       <Text style={tw`w-1/3 self-center text-lg `} numberOfLines={1}>
-        1.2000000000
+        {price}
       </Text>
     </View>
   )

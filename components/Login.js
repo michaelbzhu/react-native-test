@@ -10,7 +10,7 @@ import logo from "../assets/logo.png"
 export function Login({ navigation }) {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   const notValidEmail = (maybeValidEmail) => maybeValidEmail === ""
   const notValidPassword = (maybeValidPassword) => maybeValidPassword === ""
@@ -39,18 +39,13 @@ export function Login({ navigation }) {
         const errorMessage = error.message
         console.log({ errorCode, errorMessage })
       })
-
   }
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={tw`flex-col items-center justify-start h-full w-full mt-30`}>
         <View style={tw`flex-col items-center justify-start h-7/12 w-9/12`}>
-          <Image
-              source={logo}
-              style={tw`h-4/12`}
-              resizeMode="contain"
-            />
+          <Image source={logo} style={tw`h-4/12`} resizeMode="contain" />
           <Text category="h2">Enter CUBE.</Text>
           <View style={tw`flex-col items-center justify-around w-full h-4/12`}>
             <Input
@@ -76,8 +71,12 @@ export function Login({ navigation }) {
             </Link>
           </View>
         </View>
-        <Link to="/home"><Text style={tw`underline`} >To Home</Text></Link>
-        <Link to="/merchanthome"><Text style={tw`underline`} >To Merchant Home</Text></Link>
+        <Link to="/home">
+          <Text style={tw`underline`}>To User Home</Text>
+        </Link>
+        <Link to="/merchanthome">
+          <Text style={tw`underline`}>To Merchant Home</Text>
+        </Link>
       </View>
     </TouchableWithoutFeedback>
   )

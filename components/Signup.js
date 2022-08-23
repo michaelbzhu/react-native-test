@@ -6,15 +6,22 @@ import * as eva from "@eva-design/eva"
 import tw from "twrnc"
 import { Link, useNavigate } from "react-router-native"
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth"
-import { createAssociatedTokenAccount } from '@solana/spl-token';
-import { Cluster, clusterApiUrl, Connection, PublicKey, Keypair, Transaction, sendAndConfirmTransaction } from '@solana/web3.js';
+import { createAssociatedTokenAccount } from "@solana/spl-token"
+import {
+  Cluster,
+  clusterApiUrl,
+  Connection,
+  PublicKey,
+  Keypair,
+  Transaction,
+  sendAndConfirmTransaction,
+} from "@solana/web3.js"
 import logo from "../assets/logo.png"
-
 
 export function Signup({ navigation }) {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-  const connection = new Connection("https://api.devnet.solana.com", 'processed');
+  const connection = new Connection("https://api.devnet.solana.com", "processed")
   // const SERVER_URL = "https://hip-hands-arrive-12-202-1-227.loca.lt"
 
   const auth = getAuth()
@@ -51,11 +58,7 @@ export function Signup({ navigation }) {
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={tw`flex-col items-center justify-start h-full w-full mt-30`}>
         <View style={tw`flex-col items-center justify-start h-7/12 w-9/12`}>
-          <Image
-            source={logo}
-            style={tw`h-4/12`}
-            resizeMode="contain"
-          />
+          <Image source={logo} style={tw`h-4/12`} resizeMode="contain" />
           <Text category="h2">Join CUBE.</Text>
           <View style={tw`flex-col items-center justify-around w-full h-4/12`}>
             <Input
@@ -75,14 +78,18 @@ export function Signup({ navigation }) {
             Sign Up
           </Button>
           <View style={tw`flex-row mt-1`}>
-            <Text category="s1" >Already a CUBER? </Text>
+            <Text category="s1">Already a CUBER? </Text>
             <Link to="/login">
               <Text style={tw`underline`}>Log In</Text>
             </Link>
           </View>
         </View>
-        <Link to="/home"><Text style={tw`underline`} >To Home</Text></Link>
-        <Link to="/merchanthome"><Text style={tw`underline`} >To Merchant Home</Text></Link>
+        <Link to="/home">
+          <Text style={tw`underline`}>To User Home</Text>
+        </Link>
+        <Link to="/merchanthome">
+          <Text style={tw`underline`}>To Merchant Home</Text>
+        </Link>
       </View>
     </TouchableWithoutFeedback>
   )
