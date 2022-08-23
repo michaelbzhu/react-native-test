@@ -3,22 +3,21 @@ import { Text } from "@ui-kitten/components"
 import tw from "twrnc"
 
 export function TransactionList({ data }) {
+  const staticData = [
+    { title: "Atlas Cafe Mocha", amount: 6.5 },
+    { title: "Atlas Cafe Latte", amount: 5.5 },
+    { title: "Autonomous Desk", amount: 499.99999999 },
+    { title: "SF MUNI", amount: 2.5 },
+    { title: "Caltrain", amount: 11.9999999999 },
+    { title: "Braintrust talent", amount: 2500 },
+    { title: "STEPN Shoes", amount: 9000 },
+  ]
   return (
-    <FlatList
-      style={tw`w-full`}
-      data={[
-        { title: "Atlas Cafe Mocha", amount: 6.5 },
-        { title: "Atlas Cafe Latte", amount: 5.5 },
-        { title: "Autonomous Desk", amount: 499.99999999 },
-        { title: "SF MUNI", amount: 2.5 },
-        { title: "Caltrain", amount: 11.9999999999 },
-        { title: "Braintrust talent", amount: 2500 },
-        { title: "STEPN Shoes", amount: 9000 },
-      ]}
-      renderItem={({ item }) => (
-        <Transaction style={tw`flex w-full bg-white rounded-2xl`} title={item.title} price={item.amount} />
-      )}
-    />
+    <View style={tw`w-full`}>
+      {staticData.map(({ title, amount }) => (
+        <Transaction title={title} price={amount} />
+      ))}
+    </View>
   )
 }
 
