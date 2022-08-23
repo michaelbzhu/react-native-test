@@ -8,6 +8,7 @@ import {
   Keyboard,
   ScrollView,
   TextInput,
+  Clipboard,
 } from "react-native"
 import { ApplicationProvider, Layout, Text, Input, Button } from "@ui-kitten/components"
 import * as eva from "@eva-design/eva"
@@ -17,12 +18,14 @@ import { BottomNavigation, BottomNavigationTab, Icon } from "@ui-kitten/componen
 import { Cluster, clusterApiUrl, Connection, PublicKey } from "@solana/web3.js"
 import { encodeURL, createQR } from "@solana/pay"
 import BigNumber from "bignumber.js"
+import { usePublicKey } from "../hooks/usePublicKey"
 
 export function Deposit() {
   const location = useLocation()
   const navigate = useNavigate()
   const dashboardArr = ["/", "/pay", "/deposit"]
   const [selectedIndex, setSelectedIndex] = useState(2)
+  const { publicKey, userBalance } = usePublicKey()
 
   const [QRUrl, setQRUrl] = useState(null)
 
@@ -72,10 +75,15 @@ export function Deposit() {
         <View style={tw`flex-col items-center justify-center mb-3`}>
           <Text category="h5">CUBEPay Balance:</Text>
           <Text category="h2" style={tw`text-blue-600`}>
-            $6,341
+            ${userBalance}
           </Text>
-          <Text category="h3" style={tw`py-10`}>
-            Deposit
+
+          <Text category="h4" style={tw`pt-30`}>
+            Wallet address:
+          </Text>
+
+          <Text category="h3" style={tw`py-5`} onPress={() => Clipboard.setString(publicKey.toString())}>
+            {publicKey && publicKey.toString()}
           </Text>
 
           {/* <TextInput placeholder="0" keyboardType="number-pad" style={tw`text-5xl`}></TextInput> */}
